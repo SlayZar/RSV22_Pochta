@@ -160,12 +160,17 @@ def fit_scoring_lama_model(df, test, fit_model, MODEL_PATH):
         output2 = pd.DataFrame(
             {"id": test["id"], "label": automl2.predict(test).data[:, 0]}
         )
-        joblib.dump(automl2, MODEL_PATH)
-    elif os.path.exists(MODEL_PATH):
-        automl2 = joblib.load(MODEL_PATH)
+        if not os.path.exists(MODEL_PATH):
+            os.mkdir(MODEL_PATH)
+            joblib.dump(automl2, os.path.join(MODEL_PATH, 'automl21211_2'))
+    elif os.path.exists(os.path.join(MODEL_PATH, 'automl21211_2')):
+        automl2 = joblib.load(os.path.join(MODEL_PATH, 'automl21211_2'))
         output2 = pd.DataFrame(
             {"id": test["id"], "label": automl2.predict(test).data[:, 0]}
         )
+    else:
+        print(f"""Parameter FIT_MODEL is False
+        but there is no saved model in {MODEL_PATH}""")
     return output2
 
 
