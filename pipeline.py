@@ -162,9 +162,9 @@ def fit_scoring_lama_model(df, test, fit_model, MODEL_PATH):
         )
         if not os.path.exists(MODEL_PATH):
             os.mkdir(MODEL_PATH)
-            joblib.dump(automl2, os.path.join(MODEL_PATH, 'automl21211_2'))
-    elif os.path.exists(os.path.join(MODEL_PATH, 'automl21211_2')):
-        automl2 = joblib.load(os.path.join(MODEL_PATH, 'automl21211_2'))
+            joblib.dump(automl2, os.path.join(MODEL_PATH, 'lama_model'))
+    elif os.path.exists(os.path.join(MODEL_PATH, 'lama_model')):
+        automl2 = joblib.load(os.path.join(MODEL_PATH, 'lama_model'))
         output2 = pd.DataFrame(
             {"id": test["id"], "label": automl2.predict(test).data[:, 0]}
         )
