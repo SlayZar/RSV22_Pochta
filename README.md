@@ -25,3 +25,9 @@
 3) Обучаем LightAutoml
 
 4) Ставим порог отнесения к классу 1 равным 0.1
+
+Обученная модель - https://www.dropbox.com/s/op1zhiuj89mntrr/lama_model?dl=0
+
+Сабмит файл - https://www.dropbox.com/s/4eedgiw2jxs7lp1/lama_407860_0.1_upd.csv?dl=0
+
+Ноутбук с воспроизведением решения - https://colab.research.google.com/drive/1MNCkD78h9GMb6-IIKQE6uA-X2CZPPg7R#scrollTo=PF-xVN4YcRqH
