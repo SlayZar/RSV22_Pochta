@@ -174,7 +174,7 @@ def postprocessing_and_sc_result(df, test, output2, ss_path):
     mysols = ss.drop(["label"], axis=1).merge(
         output2.rename(columns={"label": "automl"}), on="id", how="left"
     )
-    tresh = 0.07
+    tresh = 0.1
     mysols["label"] = (mysols["automl"].fillna(0) > tresh).astype(int)
     fff = df.groupby(["first"])["label"].agg(["count", "mean"])
     good_first = fff[fff["mean"] > 0.5].sort_values(by="count").index
