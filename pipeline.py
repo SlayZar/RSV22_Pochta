@@ -13,6 +13,7 @@ from config import (
     TEST_DATAPATH,
     ss_path,
     drop_cols,
+    tresh,
 )
 
 
@@ -155,14 +156,14 @@ def fit_scoring_lama_model(df, test, fit_model, MODEL_PATH):
     )
     if fit_model:
         _ = automl2.fit_predict(
-            df[df.label1 == -1].drop(["label1"], axis=1), roles=roles
+            df[df.label1 == -1].drop(["label1"], axis=1), roles=roles, verbose=1
         )
         output2 = pd.DataFrame(
             {"id": test["id"], "label": automl2.predict(test).data[:, 0]}
         )
         if not os.path.exists(MODEL_PATH):
             os.mkdir(MODEL_PATH)
-            joblib.dump(automl2, os.path.join(MODEL_PATH, 'lama_model'))
+        joblib.dump(automl2, os.path.join(MODEL_PATH, 'lama_model'))
     elif os.path.exists(os.path.join(MODEL_PATH, 'lama_model')):
         automl2 = joblib.load(os.path.join(MODEL_PATH, 'lama_model'))
         output2 = pd.DataFrame(
@@ -179,13 +180,7 @@ def postprocessing_and_sc_result(df, test, output2, ss_path):
     mysols = ss.drop(["label"], axis=1).merge(
         output2.rename(columns={"label": "automl"}), on="id", how="left"
     )
-    tresh = 0.1
     mysols["label"] = (mysols["automl"].fillna(0) > tresh).astype(int)
-    fff = df.groupby(["first"])["label"].agg(["count", "mean"])
-    good_first = fff[fff["mean"] > 0.5].sort_values(by="count").index
-    mysols.loc[
-        mysols["id"].isin(test[test["first"].isin(good_first)]["id"]), "label"
-    ] = 1
     nums = mysols["label"].sum()
     mysols[["id", "label"]].to_csv(f"lama_{nums}_{tresh}_upd.csv", index=False)
     print(f"Predict file saved to [lama_{nums}_{tresh}_upd.csv]")
@@ -195,9 +190,9 @@ def main():
     df, test = read_data(TRAIN_DATAPATH, TEST_DATAPATH, drop_cols)
     print("Datasets readed")
     df, test = all_preprocessing(df, test, cat_features)
-    print("First preprocessing readed\nFitting model")
+    print("First preprocessing readed\nFitting model and scoring")
     output2 = fit_scoring_lama_model(df, test, fit_model, MODEL_PATH)
-    print("Scoring")
+    print("Postprocess")
     postprocessing_and_sc_result(df, test, output2, ss_path)
 
 
