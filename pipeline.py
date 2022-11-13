@@ -190,9 +190,9 @@ def main():
     df, test = read_data(TRAIN_DATAPATH, TEST_DATAPATH, drop_cols)
     print("Datasets readed")
     df, test = all_preprocessing(df, test, cat_features)
-    print("First preprocessing readed")
+    print("First preprocessing readed\nFitting model")
     output2 = fit_scoring_lama_model(df, test, fit_model, MODEL_PATH)
-    print("All preprocessing readed")
+    print("Scoring")
     postprocessing_and_sc_result(df, test, output2, ss_path)
 
 
